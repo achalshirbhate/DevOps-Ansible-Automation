@@ -1,0 +1,49 @@
+
+---
+- name: Deploy Web Application using Ansible
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Update Ubuntu package repository
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Nginx web server
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Create application web page
+      ansible.builtin.copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>My DevOps Assignment</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background: #eef2f7;
+                padding: 100px;
+              }
+              h1 { color: #1565c0; }
+            </style>
+          </head>
+          <body>
+            <h1>Welcome to My DevOps Project!</h1>
+            <h2>Automated Deployment using Ansible</h2>
+            <p>Successfully deployed on AWS EC2.</p>
+            <p>Web Server: Nginx</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Start and enable Nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
